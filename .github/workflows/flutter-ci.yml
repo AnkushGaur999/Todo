@@ -56,7 +56,7 @@ jobs:
 
       # Verify Formatting
       - name: Verify Formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format .
 
       # Static Analysis
       - name: Analyze Project

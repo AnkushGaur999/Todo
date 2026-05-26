@@ -70,7 +70,6 @@ class TodoRepositoryImpl extends TodoRepository {
         await local.saveTodo(confirmed);
         return confirmed;
       } catch (e) {
-        print("Task Add Error: $e");
         return optimistic;
       }
     }
@@ -179,7 +178,6 @@ class TodoRepositoryImpl extends TodoRepository {
       try {
         switch (todo.pendingAction) {
           case 'create':
-            print("Task create details: ${todo.toString()}");
             final serverTodo = await remote.createTodo(todo.title);
             await local.deleteTodoByKey(todo.key);
             await local.saveTodo(serverTodo.copyWith(
@@ -191,7 +189,6 @@ class TodoRepositoryImpl extends TodoRepository {
             break;
 
           case 'update':
-            print("Task update details: ${todo.toString()}");
             final success = await remote.updateTodo(todo.id, todo.completed);
             await local.saveTodo(todo.copyWith(
               isSynced: success,
@@ -208,7 +205,6 @@ class TodoRepositoryImpl extends TodoRepository {
             break;
         }
       } catch (e) {
-        print("Create Task Error: $e");
         failed++;
       }
     }

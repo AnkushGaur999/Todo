@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -5,6 +9,15 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
+val hasKeystore = keystorePropertiesFile.exists().also { exists ->
+    if (exists) keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
 android {
     namespace = "com.example.todo_app"
     compileSdk = flutter.compileSdkVersion
@@ -30,11 +43,41 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasKeystore) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        }
+    }
+
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+
+        debug {
             signingConfig = signingConfigs.getByName("debug")
+        }
+        release {
+
+            isMinifyEnabled = true
+
+            // Enables resource shrinking.
+            isShrinkResources = true
+
+            proguardFiles(
+                // Default file with automatically generated optimization rules.
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+            )
+
+            // Fall back to debug signing locally if key.properties is missing,
+            // so `flutter build apk` works on a dev machine too.
+            signingConfig = if (hasKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }

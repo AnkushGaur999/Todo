@@ -2,36 +2,108 @@ name: Flutter Android CI
 
 on:
   push:
-    branches: [ main, dev ]
-  pull_request:
-    branches: [ main, dev ]
+    branches:
+      - main
+      - dev
 
+  pull_request:
+    branches:
+      - main
+      - dev
 
 jobs:
 
-  build:
+  analyze_and_test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # Checkout Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # Setup Java Environment
-      - name: Set up Java
+      # Setup Java
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: zulu
+          java-version: 17
 
-      # Setup Flutter Environment
-      - name: Set up Flutter
+      # Setup Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: stable
+          cache: true
 
-      # Get dependencies
-      - name: Install dependencies
+      # Cache Pub Dependencies
+      - name: Cache Pub Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      # Install Dependencies
+      - name: Install Dependencies
         run: flutter pub get
 
-      - name: Build Apk
+      # Generate Files
+      # Needed for Hive, Freezed, JsonSerializable etc.
+      - name: Generate Files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Verify Formatting
+      - name: Verify Formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      # Static Analysis
+      - name: Analyze Project
+        run: flutter analyze
+
+      # Run Tests
+      - name: Run Tests
+        run: flutter test
+
+  build_apk:
+    needs: analyze_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Setup Java
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+
+      # Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # Install Dependencies
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # Generate Files
+      - name: Generate Files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Build APK
+      - name: Build APK
         run: flutter build apk --release
 
+      # Upload APK Artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk

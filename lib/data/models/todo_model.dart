@@ -1,5 +1,6 @@
 import 'dart:math';
-import 'package:hive/hive.dart';
+
+import 'package:hive_ce_flutter/adapters.dart';
 
 part 'todo_model.g.dart';
 

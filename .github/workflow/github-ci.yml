@@ -1,0 +1,68 @@
+name: Flutter Android CI
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+
+jobs:
+#  test_and_analyze:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      # Setup Java Environment
+#      - name: Set up Java
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: 'zulu'
+#          java-version: '17'
+#
+#      # Setup Flutter Environment
+#      - name: Set up Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: 'stable'
+#
+#      # Get dependencies
+#      - name: Install dependencies
+#        run: flutter pub get
+#
+#      # Check for Dart/Flutter formatting
+#      - name: Verify formatting
+#        run: dart format .
+#
+#      # Analyze the code for warnings/errors
+#      - name: Analyze project source
+#        run: flutter analyze
+#
+#      # Run all unit and widget tests
+#      - name: Run tests
+#        run: flutter test
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Setup Java Environment
+      - name: Set up Java
+        uses: actions/setup-java@v4
+
+      # Setup Flutter Environment
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # Get dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Apk
+        run: flutter build apk --release
+

@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:todo_app/core/network/api_client.dart';
 import 'package:todo_app/core/network/interceptors/auth_interceptor.dart';
 import 'package:todo_app/core/network/interceptors/retry_interceptor.dart';
@@ -17,7 +18,7 @@ import 'package:todo_app/domain/use_cases/update_todo_use_case.dart';
 import 'package:todo_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:todo_app/presentation/bloc/todo/todo_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+
 
 final sl = GetIt.instance;
 

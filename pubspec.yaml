@@ -1,7 +1,7 @@
 name: todo_app
 description: A Flutter Todo app.
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -12,20 +12,24 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.8
   dio: ^5.9.2
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
+  hive_ce_flutter: ^2.3.4
   connectivity_plus: ^7.1.1
   get_it: ^9.2.1
   uuid: ^4.5.3
   cupertino_icons: ^1.0.2
   stream_transform: ^2.1.1
+  hive_ce: ^2.19.3
+  firebase_core: ^4.7.0
+  firebase_analytics: ^12.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  hive_generator: ^2.0.1
-  build_runner: ^2.4.6
-  flutter_lints: ^2.0.0
+  bloc_test: ^10.0.0
+  mocktail: ^1.0.4
+  hive_ce_generator: ^1.11.2
+  build_runner: ^2.15.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

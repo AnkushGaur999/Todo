@@ -51,6 +51,7 @@ class TodoBloc extends Bloc<TodoEvents, TodoStates> {
     on<SyncTodos>(_onSyncTodos);
     on<ConnectionRestored>(_onConnectionRestored);
     on<ConnectionLost>(_onConnectionLost);
+    on<UpdateSync>(_onUpdateSync);
 
     _startConnectivityListener();
   }
@@ -65,8 +66,6 @@ class TodoBloc extends Bloc<TodoEvents, TodoStates> {
     ) {
       final isOnline =
           results.isNotEmpty && !results.contains(ConnectivityResult.none);
-
-      print("Connection isOnline: $isOnline");
 
       if (isOnline && _wasOffline) {
         add(ConnectionRestored());
@@ -174,9 +173,8 @@ class TodoBloc extends Bloc<TodoEvents, TodoStates> {
   Future<void> _onDeleteTodo(DeleteTodo event, Emitter<TodoStates> emit) async {
     if (state is! TodoLoaded) return;
     final current = state as TodoLoaded;
-    final optimisticList = current.todos
-        .where((t) => t.key != event.todo.key)
-        .toList();
+    final optimisticList =
+        current.todos.where((t) => t.key != event.todo.key).toList();
     emit(
       current.copyWith(
         todos: optimisticList,
@@ -270,6 +268,14 @@ class TodoBloc extends Bloc<TodoEvents, TodoStates> {
       final current = state as TodoLoaded;
       emit(current.copyWith(isOnline: false));
     }
+  }
+
+  void _onUpdateSync(UpdateSync event, Emitter<TodoStates> emit) {
+    if (state is! TodoLoaded) return;
+
+    final currentState = state as TodoLoaded;
+
+    emit(currentState.copyWith(clearSyncMessage: true));
   }
 
   Future<bool> _checkOnline() async {

@@ -30,12 +30,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
     _syncMsgTimer?.cancel();
     _syncMsgTimer = Timer(const Duration(seconds: 3), () {
       if (mounted) {
-        final state = context.read<TodoBloc>().state;
-        if (state is TodoLoaded && state.syncMessage != null) {
-          context.read<TodoBloc>().emit(
-                state.copyWith(clearSyncMessage: true),
-              );
-        }
+        context.read<TodoBloc>().add(UpdateSync(isSync: true));
       }
     });
   }

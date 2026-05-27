@@ -1,4 +1,5 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/adapters.dart';
+
 import '../../models/todo_model.dart';
 
 class TodoLocalDataSource {

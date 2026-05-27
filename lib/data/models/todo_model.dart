@@ -1,5 +1,6 @@
 import 'dart:math';
-import 'package:hive/hive.dart';
+
+import 'package:hive_ce_flutter/adapters.dart';
 
 part 'todo_model.g.dart';
 
@@ -83,14 +84,14 @@ class TodoModel extends HiveObject {
         completed: json['completed'] as bool,
         isSynced: true,
         pendingAction: 'none',
-        createdAt: json['createdAt'] != null 
-            ? DateTime.parse(json['createdAt'] as String) 
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'] as String)
             : null,
-        updatedAt: json['updatedAt'] != null 
-            ? DateTime.parse(json['updatedAt'] as String) 
+        updatedAt: json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'] as String)
             : null,
-        deletedAt: json['deletedAt'] != null 
-            ? DateTime.parse(json['deletedAt'] as String) 
+        deletedAt: json['deletedAt'] != null
+            ? DateTime.parse(json['deletedAt'] as String)
             : null,
       );
 

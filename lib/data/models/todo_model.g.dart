@@ -8,7 +8,7 @@ part of 'todo_model.dart';
 
 class TodoModelAdapter extends TypeAdapter<TodoModel> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   TodoModel read(BinaryReader reader) {
@@ -17,12 +17,12 @@ class TodoModelAdapter extends TypeAdapter<TodoModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return TodoModel(
-      id: fields[0] as int,
+      id: (fields[0] as num).toInt(),
       title: fields[1] as String,
       completed: fields[2] as bool,
-      isSynced: fields[3] as bool,
+      isSynced: fields[3] == null ? true : fields[3] as bool,
       localId: fields[4] as String?,
-      pendingAction: fields[5] as String,
+      pendingAction: fields[5] == null ? 'none' : fields[5] as String,
       createdAt: fields[6] as DateTime?,
       updatedAt: fields[7] as DateTime?,
       deletedAt: fields[8] as DateTime?,

@@ -1,0 +1,168 @@
+name: Flutter Android CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+
+  analyze_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Setup Java
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+
+      # Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # Cache Pub Dependencies
+      - name: Cache Pub Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      # Install Dependencies
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # Generate Files
+      # Needed for Hive, Freezed, JsonSerializable etc.
+      - name: Generate Files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Verify Formatting
+      - name: Verify Formatting
+        run: dart format .
+
+      # Static Analysis
+      - name: Analyze Project
+        run: flutter analyze
+
+      # Run Tests
+      - name: Run Tests
+        run: flutter test
+
+  build_apk:
+    needs: analyze_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Setup Java
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+
+      # Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # Install Dependencies
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # Generate Files
+      - name: Generate Files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Build APK
+      - name: Build APK
+        run: flutter build apk --release
+
+      # Upload APK Artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  build_and_deploy_to_firebase:
+    name: Build APK and Distribute to QA
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main'
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK Environment
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true # Speed up subsequent pipeline runs
+
+      - name: Install Project Dependencies
+        run: flutter pub get
+
+      # Uncomment if your architecture uses automated code generation
+      - name: Run Build Runner
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Decode Keystore
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+
+      # Create key.properties
+      - name: Create key.properties
+        run: |
+          echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties
+
+      # Inject Google Services JSON dynamically if you use it
+      - name: Inject Firebase Configuration
+        run: |
+          mkdir -p android/app
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > android/app/google-services.json
+        shell: bash
+        # Only run this step if you have configured GOOGLE_SERVICES_JSON in your secrets
+        continue-on-error: true
+
+      # Build individual Android Dev/QA APK
+      - name: Compile Release APK
+        run: flutter build apk --release
+
+      # Direct Upload to Firebase App Distribution
+      - name: Upload Artifact to Firebase App Distribution
+        uses: w9jds/firebase-action@v13.4.0 # Fully updated community action for Firebase CLI
+        with:
+          args: "appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --groups qa-testers --release-notes 'Automated Build from Commit: ${{ github.sha }}'"
+        env:
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}

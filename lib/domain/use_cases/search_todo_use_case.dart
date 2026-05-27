@@ -1,4 +1,3 @@
-
 import 'package:todo_app/domain/repositories/todo_repository.dart';
 
 class SearchTodoUseCase {
@@ -9,5 +8,4 @@ class SearchTodoUseCase {
   // Future<void> call()async{
   //   return repository.
   // }
-
 }

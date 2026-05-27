@@ -10,8 +10,18 @@ class TodoTile extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     final day = date.day;
     final month = months[date.month - 1];
@@ -38,7 +48,11 @@ class TodoTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.delete_sweep_rounded, color: Colors.white, size: 28),
-              Text('Delete', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+              Text('Delete',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold)),
             ],
           ),
         ),
@@ -79,7 +93,8 @@ class TodoTile extends StatelessWidget {
                 child: Checkbox(
                   value: todo.completed,
                   activeColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
                   side: BorderSide(color: Colors.grey.shade300, width: 2),
                   onChanged: (_) {
                     context.read<TodoBloc>().add(ToggleTodo(todo));
@@ -89,10 +104,12 @@ class TodoTile extends StatelessWidget {
               title: Text(
                 todo.title,
                 style: TextStyle(
-                  decoration: todo.completed ? TextDecoration.lineThrough : null,
+                  decoration:
+                      todo.completed ? TextDecoration.lineThrough : null,
                   color: todo.completed ? Colors.grey.shade400 : Colors.black87,
                   fontSize: 16,
-                  fontWeight: todo.completed ? FontWeight.normal : FontWeight.w600,
+                  fontWeight:
+                      todo.completed ? FontWeight.normal : FontWeight.w600,
                 ),
               ),
               subtitle: Padding(
@@ -102,11 +119,13 @@ class TodoTile extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.calendar_today_rounded, size: 12, color: Colors.grey.shade400),
+                        Icon(Icons.calendar_today_rounded,
+                            size: 12, color: Colors.grey.shade400),
                         const SizedBox(width: 4),
                         Text(
                           'Created: ${_formatDate(todo.createdAt)}',
-                          style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                          style: TextStyle(
+                              fontSize: 11, color: Colors.grey.shade500),
                         ),
                       ],
                     ),
@@ -114,7 +133,8 @@ class TodoTile extends StatelessWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.check_circle_outline_rounded, size: 12, color: Colors.green.shade300),
+                          Icon(Icons.check_circle_outline_rounded,
+                              size: 12, color: Colors.green.shade300),
                           const SizedBox(width: 4),
                           Text(
                             'Completed: ${_formatDate(todo.updatedAt)}',
@@ -152,7 +172,8 @@ class TodoTile extends StatelessWidget {
                 color: Colors.green.shade50,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.done_all_rounded, color: Colors.green.shade400, size: 16),
+              child: Icon(Icons.done_all_rounded,
+                  color: Colors.green.shade400, size: 16),
             )
           : const SizedBox(width: 24);
     }
@@ -208,11 +229,14 @@ class TodoTile extends StatelessWidget {
             Text('Delete Task'),
           ],
         ),
-        content: Text('Are you sure you want to delete "${todo.title}"?\nThis action cannot be undone.'),
+        content: Text(
+            'Are you sure you want to delete "${todo.title}"?\nThis action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel', style: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.bold)),
+            child: Text('Cancel',
+                style: TextStyle(
+                    color: Colors.grey.shade600, fontWeight: FontWeight.bold)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -220,10 +244,12 @@ class TodoTile extends StatelessWidget {
               foregroundColor: Colors.white,
               elevation: 0,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: const Text('Delete',
+                style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),

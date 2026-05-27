@@ -132,8 +132,18 @@ jobs:
         run: flutter pub get
 
       # Uncomment if your architecture uses automated code generation
-      # - name: Run Build Runner
-      #   run: dart run build_runner build --delete-conflicting-outputs
+      - name: Run Build Runner
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Decode Keystore
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+
+      # Create key.properties
+      - name: Create key.properties
+        run: |
+          echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties
 
       # Inject Google Services JSON dynamically if you use it
       - name: Inject Firebase Configuration
@@ -145,15 +155,15 @@ jobs:
         continue-on-error: true
 
       # Build individual Android Dev/QA APK
-      - name: Compile Debug APK
-        run: flutter build apk --debug --build-name = "1.0.0" --build-number = 1
+      - name: Compile Release APK
+        run: flutter build apk --release
 
       # Direct Upload to Firebase App Distribution
       - name: Upload Artifact to Firebase App Distribution
         uses: w9jds/firebase-action@v13.4.0 # Fully updated community action for Firebase CLI
         with:
           args: >
-            appdistribution:distribute build/app/outputs/flutter-apk/app-debug.apk 
+            appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk
             --app "${{ secrets.FIREBASE_APP_ID }}" 
             --groups "qa-testers" 
             --release-notes "Automated Build from Commit: ${{ github.sha }}"

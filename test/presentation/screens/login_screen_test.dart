@@ -6,7 +6,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:todo_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:todo_app/presentation/screens/login_screen.dart';
 
-class MockAuthBloc extends MockBloc<AuthEvents, AuthStates> implements AuthBloc {}
+class MockAuthBloc extends MockBloc<AuthEvents, AuthStates>
+    implements AuthBloc {}
 
 void main() {
   late MockAuthBloc mockAuthBloc;
@@ -40,10 +41,13 @@ void main() {
       expect(find.text('Password'), findsOneWidget);
       expect(find.byType(ElevatedButton), findsOneWidget);
       expect(find.text('Sign In'), findsOneWidget);
-      expect(find.text('Demo credentials: admin / password123'), findsOneWidget);
+      expect(
+          find.text('Demo credentials: admin / password123'), findsOneWidget);
     });
 
-    testWidgets('shows validation errors when fields are empty and Sign In is pressed', (tester) async {
+    testWidgets(
+        'shows validation errors when fields are empty and Sign In is pressed',
+        (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
       await tester.tap(find.byType(ElevatedButton));
@@ -51,11 +55,13 @@ void main() {
 
       expect(find.text('Please enter your username'), findsOneWidget);
       expect(find.text('Please enter your password'), findsOneWidget);
-      
+
       verifyNever(() => mockAuthBloc.add(any()));
     });
 
-    testWidgets('adds LoginRequested event when valid credentials are submitted', (tester) async {
+    testWidgets(
+        'adds LoginRequested event when valid credentials are submitted',
+        (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
       await tester.enterText(find.byType(TextFormField).at(0), 'admin');
@@ -63,19 +69,22 @@ void main() {
       await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
-      verify(() => mockAuthBloc.add(any(that: isA<LoginRequested>()
-          .having((e) => e.username, 'username', 'admin')
-          .having((e) => e.password, 'password', 'password123')))).called(1);
+      verify(() => mockAuthBloc.add(any(
+              that: isA<LoginRequested>()
+                  .having((e) => e.username, 'username', 'admin')
+                  .having((e) => e.password, 'password', 'password123'))))
+          .called(1);
     });
 
-    testWidgets('shows loading indicator when state is AuthLoading', (tester) async {
+    testWidgets('shows loading indicator when state is AuthLoading',
+        (tester) async {
       when(() => mockAuthBloc.state).thenReturn(AuthLoading());
 
       await tester.pumpWidget(createWidgetUnderTest());
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       expect(find.text('Sign In'), findsNothing);
-      
+
       final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
       expect(button.onPressed, isNull);
     });
@@ -94,7 +103,8 @@ void main() {
       expect(find.text('Invalid credentials'), findsOneWidget);
     });
 
-    testWidgets('toggles password visibility when eye icon is tapped', (tester) async {
+    testWidgets('toggles password visibility when eye icon is tapped',
+        (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
       Finder findPasswordField() => find.descendant(
@@ -110,7 +120,8 @@ void main() {
       await tester.tap(find.byIcon(Icons.visibility_off));
       await tester.pump();
 
-      expect(tester.widget<TextField>(findPasswordField()).obscureText, isFalse);
+      expect(
+          tester.widget<TextField>(findPasswordField()).obscureText, isFalse);
     });
   });
 }

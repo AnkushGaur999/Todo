@@ -111,6 +111,7 @@ jobs:
   build_and_deploy_to_firebase:
     name: Build APK and Distribute to QA
     runs-on: ubuntu-latest
+    if: github.ref_name == 'main'
 
     steps:
       - name: Checkout Source Code

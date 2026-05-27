@@ -38,11 +38,9 @@ final class SearchTodos extends TodoEvents {
   SearchTodos(this.query);
 }
 
-final class UpdateSync extends TodoEvents{
-
+final class UpdateSync extends TodoEvents {
   final bool isSync;
   UpdateSync({required this.isSync});
-
 }
 
 final class SyncTodos extends TodoEvents {}

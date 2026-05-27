@@ -21,7 +21,8 @@ void main() {
     blocTest<AuthBloc, AuthStates>(
       'emits [AuthLoading, AuthAuthenticated] when LoginRequested is successful',
       build: () => authBloc,
-      act: (bloc) => bloc.add(LoginRequested(username: 'admin', password: 'password123')),
+      act: (bloc) =>
+          bloc.add(LoginRequested(username: 'admin', password: 'password123')),
       wait: const Duration(milliseconds: 600),
       expect: () => [
         isA<AuthLoading>(),
@@ -32,22 +33,26 @@ void main() {
     blocTest<AuthBloc, AuthStates>(
       'emits [AuthLoading, AuthFailure] when LoginRequested fails due to wrong username',
       build: () => authBloc,
-      act: (bloc) => bloc.add(LoginRequested(username: 'wrong', password: 'password123')),
+      act: (bloc) =>
+          bloc.add(LoginRequested(username: 'wrong', password: 'password123')),
       wait: const Duration(milliseconds: 600),
       expect: () => [
         isA<AuthLoading>(),
-        isA<AuthFailure>().having((s) => s.message, 'message', 'Invalid username or password.'),
+        isA<AuthFailure>().having(
+            (s) => s.message, 'message', 'Invalid username or password.'),
       ],
     );
 
     blocTest<AuthBloc, AuthStates>(
       'emits [AuthLoading, AuthFailure] when LoginRequested fails due to wrong password',
       build: () => authBloc,
-      act: (bloc) => bloc.add(LoginRequested(username: 'admin', password: 'wrong')),
+      act: (bloc) =>
+          bloc.add(LoginRequested(username: 'admin', password: 'wrong')),
       wait: const Duration(milliseconds: 600),
       expect: () => [
         isA<AuthLoading>(),
-        isA<AuthFailure>().having((s) => s.message, 'message', 'Invalid username or password.'),
+        isA<AuthFailure>().having(
+            (s) => s.message, 'message', 'Invalid username or password.'),
       ],
     );
 

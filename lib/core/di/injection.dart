@@ -19,7 +19,6 @@ import 'package:todo_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:todo_app/presentation/bloc/todo/todo_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {

@@ -99,10 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          validator: (v) =>
-                              (v == null || v.trim().isEmpty)
-                                  ? 'Please enter your username'
-                                  : null,
+                          validator: (v) => (v == null || v.trim().isEmpty)
+                              ? 'Please enter your username'
+                              : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
@@ -124,13 +123,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          validator: (v) =>
-                              (v == null || v.isEmpty)
-                                  ? 'Please enter your password'
-                                  : null,
+                          validator: (v) => (v == null || v.isEmpty)
+                              ? 'Please enter your password'
+                              : null,
                         ),
                         const SizedBox(height: 28),
-
                         BlocBuilder<AuthBloc, AuthStates>(
                           builder: (context, state) {
                             final isLoading = state is AuthLoading;

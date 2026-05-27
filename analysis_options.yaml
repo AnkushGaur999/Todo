@@ -2,20 +2,21 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   errors:
-    unused_local_variable: error
-    unused_import: error
-    invalid_annotation_target: error
     missing_required_param: error
-    dead_code: error
-
+    missing_return: error
+    unused_import: warning   # yellow warning
+    dead_code: error         # red error
+    todo: ignore             # completely ignore
   exclude:
-    - "build/**"
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
-    - "lib/generated/**"
+    - "**/*.g.dart"        # ignore generated files
+    - "**/*.freezed.dart"  # ignore freezed files
 
 linter:
   rules:
-    - always_declare_return_types
+    - avoid_print          # warn on print() usage
     - prefer_const_constructors
-    - avoid_print
+    - prefer_single_quotes
+    - always_declare_return_types
+    - prefer_is_empty
+    - prefer_is_not_empty
+    - prefer_if_null_operators

@@ -146,7 +146,7 @@ jobs:
 
       # Build individual Android Dev/QA APK
       - name: Compile Debug APK
-        run: flutter build apk --debug --build-number=${{ github.run_number }}
+        run: flutter build apk --debug --build-name = "1.0.0" --build-number = 1
 
       # Direct Upload to Firebase App Distribution
       - name: Upload Artifact to Firebase App Distribution

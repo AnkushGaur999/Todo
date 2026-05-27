@@ -162,10 +162,6 @@ jobs:
       - name: Upload Artifact to Firebase App Distribution
         uses: w9jds/firebase-action@v13.4.0 # Fully updated community action for Firebase CLI
         with:
-          args: >
-            appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk
-            --app "${{ secrets.FIREBASE_APP_ID }}" 
-            --groups "qa-testers" 
-            --release-notes "Automated Build from Commit: ${{ github.sha }}"
+          args: "appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --groups qa-testers --release-notes 'Automated Build from Commit: ${{ github.sha }}'"
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}

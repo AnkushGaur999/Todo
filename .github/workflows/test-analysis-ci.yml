@@ -47,14 +47,9 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      # Generate Files
-      # Needed for Hive, Freezed, JsonSerializable etc.
-      - name: Generate Files
-        run: dart run build_runner build --delete-conflicting-outputs
-
       # Verify Formatting
       - name: Verify Formatting
-        run: dart format .
+        run: dart format --output=none --set-exit-if-changed lib test
 
       # Static Analysis
       - name: Analyze Project
@@ -91,17 +86,13 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      # Generate Files
-      - name: Generate Files
-        run: dart run build_runner build --delete-conflicting-outputs
-
       # Build APK
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --debug --flavor development -t lib/main_development.dart
 
       # Upload APK Artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: debug-apk
+          path: build/app/outputs/flutter-apk/app-development-debug.apk

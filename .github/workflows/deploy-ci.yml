@@ -35,10 +35,6 @@ jobs:
       - name: Install Project Dependencies
         run: flutter pub get
 
-      # Uncomment if your architecture uses automated code generation
-      - name: Run Build Runner
-        run: dart run build_runner build --delete-conflicting-outputs
-
       # Decode Keystore
       - name: Decode Keystore
         run: |
@@ -60,12 +56,12 @@ jobs:
 
       # Build individual Android Dev/QA APK
       - name: Compile Release APK
-        run: flutter build apk --release
+        run: flutter build apk --release --flavor production -t lib/main.dart
 
       # Direct Upload to Firebase App Distribution
       - name: Upload Artifact to Firebase App Distribution
         uses: w9jds/firebase-action@v13.4.0 # Fully updated community action for Firebase CLI
         with:
-          args: "appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --groups qa-testers --release-notes 'Automated Build from Commit: ${{ github.sha }}'"
+          args: "appdistribution:distribute build/app/outputs/flutter-apk/app-production-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --groups qa-testers --release-notes 'Automated Build from Commit: ${{ github.sha }}'"
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}

@@ -8,8 +8,10 @@ analyzer:
     dead_code: error         # red error
     todo: ignore             # completely ignore
   exclude:
-    - "**/*.g.dart"        # ignore generated files
-    - "**/*.freezed.dart"  # ignore freezed files
+    - "build/**"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "lib/generated/**"
 
 linter:
   rules:

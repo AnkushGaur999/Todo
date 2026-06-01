@@ -83,6 +83,43 @@ android {
             }
         }
     }
+
+
+    flavorDimensions += "default"
+    productFlavors {
+
+        create("development") {
+            dimension = "default"
+          //  applicationIdSuffix = ".development"
+
+            resValue(
+                value = "Todo Dev",
+                name = "app_name",
+                type = "string"
+            )
+
+        }
+
+        create("staging") {
+            dimension = "default"
+          //  applicationIdSuffix = ".staging"
+
+            resValue(
+                value = "Todo Stag",
+                name = "app_name",
+                type = "string"
+            )
+        }
+        create("production") {
+            dimension = "default"
+           // applicationIdSuffix = ".production"
+            resValue(
+                value = "Todo",
+                name = "app_name",
+                type = "string"
+            )
+        }
+    }
 }
 
 flutter {
